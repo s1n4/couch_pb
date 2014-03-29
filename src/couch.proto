@@ -1,0 +1,10 @@
+message CpbRequest {
+  required int32 command = 1;
+  optional string db_name = 2;
+  optional string doc = 3;
+}
+
+message CpbResponse {
+  required int32 resp_code = 1;
+  optional string result = 2;
+}

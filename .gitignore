@@ -1,0 +1,4 @@
+*.beam
+erl_crash.dump
+deps
+include/couch_pb.hrl
