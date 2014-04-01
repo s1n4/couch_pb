@@ -1,0 +1,1 @@
+* CouchDB Protocol Buffers Codec
