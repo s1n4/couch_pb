@@ -46,3 +46,38 @@ get_command_num(C) ->
         {N, C} -> N;
         _ -> {error, not_found}
     end.
+
+
+%% -----------------------------------------------------------------------------
+%% tests
+%% -----------------------------------------------------------------------------
+-ifdef(TEST).
+
+encoded_req() ->
+    <<8,3,18,13,99,111,117,99,104,45,112,98,45,116,101,115,116>>.
+
+decoded_req() ->
+    #cpbrequest{command = 3, db_name = "couch-pb-test"}.
+
+encoded_resp() ->
+    <<8,1,18,11,115,111,109,101,32,114,101,115,117,108,116>>.
+
+decoded_resp() ->
+    #cpbresponse{resp_code = 1, result="some result"}.
+
+commands_test() ->
+    commands() =/= [].
+
+encode_req_test() ->
+    true = (encoded_req() =:= encode_req(decoded_req())).
+
+decode_req_test() ->
+    true = (decoded_req() =:= decode_req(encoded_req())).
+
+encode_resp_test() ->
+    true = (encoded_resp() =:= encode_resp(decoded_resp())).
+
+decode_resp_test() ->
+    true = (decoded_resp() =:= decode_resp(encoded_resp())).
+
+-endif.
