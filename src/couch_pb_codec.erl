@@ -8,23 +8,29 @@
 %% -----------------------------------------------------------------------------
 %% API
 %% -----------------------------------------------------------------------------
--export([encode/2]).
--export([decode/2]).
+-export([encode_req/1]).
+-export([encode_resp/1]).
+-export([decode_req/1]).
+-export([decode_resp/1]).
 -export([get_command_name/1]).
 -export([get_command_num/1]).
 
 -include("include/couch_pb.hrl").
 
--spec encode(req | resp, #cpbrequest{} | #cpbresponse{}) -> binary().
-encode(req, Req) ->
-    iolist_to_binary(couch_pb:encode_cpbrequest(Req));
-encode(resp, Resp) ->
+-spec encode_req(#cpbrequest{}) -> binary().
+encode_req(Req) ->
+    iolist_to_binary(couch_pb:encode_cpbrequest(Req)).
+
+-spec encode_resp(#cpbresponse{}) -> binary().
+encode_resp(Resp) ->
     iolist_to_binary(couch_pb:encode_cpbresponse(Resp)).
 
--spec decode(req | resp, binary()) -> #cpbrequest{} | #cpbresponse{}.
-decode(req, Req) ->
-    couch_pb:decode_cpbrequest(Req);
-decode(resp, Resp) ->
+-spec decode_req(binary()) -> #cpbrequest{}.
+decode_req(Req) ->
+    couch_pb:decode_cpbrequest(Req).
+
+-spec decode_resp(binary()) -> #cpbresponse{}.
+decode_resp(Resp) ->
     couch_pb:decode_cpbresponse(Resp).
 
 -spec get_command_name(non_neg_integer()) -> atom() | {error, not_found}.
