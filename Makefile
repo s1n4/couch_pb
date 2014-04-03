@@ -36,7 +36,7 @@ compile:
 	$(compile_app)
 
 clean:
-	rm -rf *.beam ebin/*.beam erl_crash.dump
+	rm -rf *.beam ebin/*.beam erl_crash.dump $(INCLUDE_DIR)/couch_pb.hrl
 
 distclean: clean
 	rm -rf $(DEPS_DIR)

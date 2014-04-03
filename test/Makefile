@@ -11,7 +11,7 @@ ERL = erl -pa $(APP_ROOT) $(EBIN) $(DEPS_DIR)/*/ebin
 PROTOBUFF_FILE = $(APP_ROOT)/src/couch.proto
 
 define run_eunit
-	@$(ERL) -noshell -noinput -eval '\
+	$(ERL) -noshell -noinput -eval '\
 		case eunit:test({application, couch_pb}) of \
 			error -> init:stop(1); \
 			ok -> init:stop(0) \
@@ -19,5 +19,6 @@ define run_eunit
 endef
 
 run-tests:
+	@mkdir -p $(INCLUDE_DIR)
 	@$(compile_app) > /dev/null
 	$(run_eunit)
