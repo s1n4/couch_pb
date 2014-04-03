@@ -80,4 +80,10 @@ encode_resp_test() ->
 decode_resp_test() ->
     true = (decoded_resp() =:= decode_resp(encoded_resp())).
 
+get_command_name_test() ->
+    all_dbs = get_command_name(2).
+
+get_command_num_test() ->
+    2 = get_command_num(all_dbs).
+
 -endif.
