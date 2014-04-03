@@ -44,5 +44,5 @@ distclean: clean
 shell:
 	$(ERL)
 
-test: clean
-	cd $(TEST_DIR); $(MAKE)
+test: clean deps
+	@cd $(TEST_DIR); $(MAKE)
