@@ -1,0 +1,2 @@
+{"../src/*", [debug_info, warn_shadow_vars, export_all,
+              {i, "../"}, {outdir, "../ebin"}, {d, 'TEST'}]}.

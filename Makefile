@@ -1,4 +1,4 @@
-.PHONY: all deps compile clean distclean shell
+.PHONY: all deps compile clean distclean shell test
 
 INCLUDE_DIR = $(CURDIR)/include
 EBIN = $(CURDIR)/ebin
@@ -7,6 +7,8 @@ PROTOBUFF_TARBALL = https://github.com/basho/erlang_protobuffs/archive/0.8.1p3.t
 PROTOBUFF_DEP = $(DEPS_DIR)
 DEPS = $(PROTOBUFF_DEP)/erlang_protobuffs-0.8.1p3.tar.gz
 ERL = erl -pa $(EBIN) $(DEPS_DIR)/*/ebin
+PROTOBUFF_FILE = $(CURDIR)/src/couch.proto
+TEST_DIR = $(CURDIR)/test
 
 all: deps compile
 
@@ -25,7 +27,7 @@ $(PROTOBUFF_DEP)/%.tar.gz:
 
 define compile_app
 	$(ERL) -eval ' \
-		protobuffs_compile:scan_file("src/couch.proto", \
+		protobuffs_compile:scan_file("$(PROTOBUFF_FILE)", \
 		[{output_include_dir, "$(INCLUDE_DIR)"}, {output_ebin_dir, "$(EBIN)"}]).' \
 		-make
 endef
@@ -41,3 +43,6 @@ distclean: clean
 
 shell:
 	$(ERL)
+
+test: clean
+	cd $(TEST_DIR); $(MAKE)
