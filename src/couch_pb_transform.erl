@@ -20,7 +20,9 @@ walk_ast([{attribute, L, module, _}=Form|Rest], Acc) ->
 %% append commands/0 -> [{non_neg_integer(), atom()}]
 %% -----------------------------------------------------------------------------
 walk_ast([{eof, L}=Form|Rest], Acc) ->
-    Commands = parse_csv_file(filename:join("src", "couch_pb_commands.csv")),
+    Root = filename:dirname(filename:dirname(code:which(couch_pb_transform))),
+    CsvFile = filename:join([Root, "src", "couch_pb_commands.csv"]),
+    Commands = parse_csv_file(CsvFile),
     Acc1 = [{function, L, commands, 0,
              [
               {clause, L, [], [],
