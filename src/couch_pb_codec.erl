@@ -16,6 +16,7 @@
 -export([decode_kv/1]).
 -export([encode_doc/1]).
 -export([decode_doc/1]).
+-export([to_binary/1]).
 -export([get_command_name/1]).
 -export([get_command_id/1]).
 
@@ -55,6 +56,14 @@ encode_doc(Doc) ->
 -spec decode_doc(#cpbdoc{}) -> document().
 decode_doc(#cpbdoc{kv = KVs}) ->
     [decode_kv(KV) || KV <- KVs].
+
+-spec to_binary(integer() | string() | atom()) -> binary().
+to_binary(A) when is_integer(A) ->
+    to_binary(integer_to_list(A));
+to_binary(A) when is_atom(A) ->
+    to_binary(atom_to_list(A));
+to_binary(A) when is_list(A) ->
+    list_to_binary(A).
 
 -spec get_command_name(non_neg_integer()) -> atom() | {error, not_found}.
 get_command_name(N) ->
