@@ -12,10 +12,17 @@
 -export([encode_resp/1]).
 -export([decode_req/1]).
 -export([decode_resp/1]).
+-export([encode_kv/1]).
+-export([decode_kv/1]).
+-export([encode_doc/1]).
+-export([decode_doc/1]).
 -export([get_command_name/1]).
 -export([get_command_id/1]).
 
 -include("include/couch_pb.hrl").
+
+-type key_value() :: {binary(), binary()}.
+-type document() :: [key_value()].
 
 -spec encode_req(#cpbrequest{}) -> binary().
 encode_req(Req) ->
@@ -32,6 +39,22 @@ decode_req(Req) ->
 -spec decode_resp(binary()) -> #cpbresponse{}.
 decode_resp(Resp) ->
     couch_pb:decode_cpbresponse(Resp).
+
+-spec encode_kv(key_value()) -> #cpbkv{}.
+encode_kv({K, V}) ->
+    #cpbkv{key = K, value = V}.
+
+-spec decode_kv(#cpbkv{}) -> key_value().
+decode_kv(#cpbkv{key = K, value = V}) ->
+    {K, V}.
+
+-spec encode_doc(document()) -> #cpbdoc{}.
+encode_doc(Doc) ->
+    #cpbdoc{kv = [#cpbkv{key = K, value = V} || {K, V} <- Doc]}.
+
+-spec decode_doc(#cpbdoc{}) -> document().
+decode_doc(#cpbdoc{kv = KVs}) ->
+    [decode_kv(KV) || KV <- KVs].
 
 -spec get_command_name(non_neg_integer()) -> atom() | {error, not_found}.
 get_command_name(N) ->
@@ -53,32 +76,8 @@ get_command_id(C) ->
 %% -----------------------------------------------------------------------------
 -ifdef(TEST).
 
-encoded_req() ->
-    <<8,3,18,13,99,111,117,99,104,45,112,98,45,116,101,115,116>>.
-
-decoded_req() ->
-    #cpbrequest{command = 3, db_name = "couch-pb-test"}.
-
-encoded_resp() ->
-    <<8,1,18,11,115,111,109,101,32,114,101,115,117,108,116>>.
-
-decoded_resp() ->
-    #cpbresponse{resp_code = 1, result="some result"}.
-
 commands_test() ->
     commands() =/= [].
-
-encode_req_test() ->
-    true = (encoded_req() =:= encode_req(decoded_req())).
-
-decode_req_test() ->
-    true = (decoded_req() =:= decode_req(encoded_req())).
-
-encode_resp_test() ->
-    true = (encoded_resp() =:= encode_resp(decoded_resp())).
-
-decode_resp_test() ->
-    true = (decoded_resp() =:= decode_resp(encoded_resp())).
 
 get_command_name_test() ->
     true = is_atom(get_command_name(2)),
