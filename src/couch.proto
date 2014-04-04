@@ -1,10 +1,37 @@
+// request
 message CpbRequest {
   required int32 command = 1;
-  optional string db_name = 2;
-  optional string doc = 3;
+  optional bytes db_name = 2;
+  optional CpbDoc doc = 3;
+  optional CpbOpts options = 4;
+  optional bytes username = 5;
+  optional bytes password = 6;
 }
 
+// response
 message CpbResponse {
   required int32 resp_code = 1;
-  optional string result = 2;
+  optional CpbResult result = 2;
+}
+
+message CpbResult {
+  optional bytes msg = 1;
+  optional CpbDoc doc = 2;
+  repeated bytes items = 3;
+}
+
+// key-value pair
+message CpbKV {
+  required bytes key = 1;
+  required bytes value = 2;
+}
+
+// key-value pair-based document
+message CpbDoc {
+  repeated CpbKV kv = 1;
+}
+
+message CpbOpts {
+  optional bool bulk = 1;
+  // TODO: complete it
 }
